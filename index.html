@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ajax</title>
+</head>
+<body>
+    <button id="ajaxButton" type="button">Request</button>
+    <script>
+        (function(){
+            var httpRequest;
+            document.getElementById('ajaxButton').addEventListener('click', makeRequest);
+
+            function makeRequest(){
+                httpRequest = new XMLHttpRequest();
+
+                if(!httpRequest) {
+                    alert('中断 :( XMLHTTP インスタンスを生成できませんでした)')
+                    return false;
+                }
+                httpRequest.onreadystatechange = alertContents;
+                httpRequest.open('GET', 'test.html');
+                httpRequest.send();
+            }
+
+            function alertContents() {
+                try {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                        if (httpRequest.status === 200) {
+                            alert(httpRequest.responseText);
+                        } else {
+                            alert('リクエスト中に問題が発生しました');
+                        }
+                    }
+                } catch (e) {
+                    alert('例外を捕捉: ' + e.description);
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
