@@ -7,35 +7,46 @@
     <title>Ajax</title>
 </head>
 <body>
-    <button id="ajaxButton" type="button">Request</button>
+    <label>Your name:
+        <input type="text" id="ajaxTextbox">
+    </label>
+    <span id="ajaxButton" style="cursor: pointer; text-decoration: underline">
+        Make a request
+    </span>
     <script>
         (function(){
             var httpRequest;
-            document.getElementById('ajaxButton').addEventListener('click', makeRequest);
+            document.getElementById('ajaxButton').onclick = function () {
+                var userName = document.getElementById('ajaxTextbox').value;
+                makeRequest('test.php', userName);
+            };
 
-            function makeRequest(){
+            function makeRequest(url, userName){
                 httpRequest = new XMLHttpRequest();
 
                 if(!httpRequest) {
                     alert('中断 :( XMLHTTP インスタンスを生成できませんでした)')
                     return false;
                 }
+
                 httpRequest.onreadystatechange = alertContents;
-                httpRequest.open('GET', 'test.html');
-                httpRequest.send();
+                httpRequest.open('POST', url);
+                httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                httpRequest.send('userName=' + encodeURIComponent(userName));
             }
 
             function alertContents() {
                 try {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === 200) {
-                            alert(httpRequest.responseText);
+                            var res = JSON.parse(httpRequest.responseText);
+                            alert(res.computedString);
                         } else {
                             alert('リクエスト中に問題が発生しました');
                         }
                     }
                 } catch (e) {
-                    alert('例外を捕捉: ' + e.description);
+                    alert('例外を捕捉: ' + e);
                 }
             }
         })();
