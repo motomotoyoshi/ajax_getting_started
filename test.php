@@ -1,6 +1,6 @@
 <?php
-$filename= 'a.json';
-$name = (isset($_POST['userName'])) ? $_POST['userName'] : 'no name';
+$filename= 'data.json';
+$name = !empty($_POST['userName']) ? $_POST['userName'] : 'no name';
 $computedString = "Hi, ". $name;
 $array = [
     'userName' => $name,

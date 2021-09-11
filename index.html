@@ -40,7 +40,6 @@
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === 200) {
                             var res = JSON.parse(httpRequest.responseText);
-                            console.log(res.computedString !== targetElement.innerText);
                             if(res.computedString !== targetElement.innerText){
                                 document.getElementById("aj").innerText = res.computedString;
                             }
