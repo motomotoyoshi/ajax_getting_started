@@ -17,7 +17,19 @@
     <script>
         (function(){
             var httpRequest;
-            var targetElement = document.getElementById("aj");
+            const targetElement = document.getElementById("aj");
+            const param = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8"
+                }
+            }
+            fetch("data.json", param).then(function(res){
+                res.json().then(function(json){
+                    targetElement.textContent = json.computedString;
+                });
+            })
+            
             document.getElementById('ajaxButton').onclick = function () {
                 var userName = document.getElementById('ajaxTextbox').value;
                 makeRequest('test.php', userName);
