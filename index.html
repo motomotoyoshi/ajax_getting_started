@@ -13,9 +13,11 @@
     <span id="ajaxButton" style="cursor: pointer; text-decoration: underline">
         Make a request
     </span>
+    <p id="aj"></p>
     <script>
         (function(){
             var httpRequest;
+            var targetElement = document.getElementById("aj");
             document.getElementById('ajaxButton').onclick = function () {
                 var userName = document.getElementById('ajaxTextbox').value;
                 makeRequest('test.php', userName);
@@ -23,24 +25,25 @@
 
             function makeRequest(url, userName){
                 httpRequest = new XMLHttpRequest();
-
                 if(!httpRequest) {
                     alert('中断 :( XMLHTTP インスタンスを生成できませんでした)')
                     return false;
                 }
-
-                httpRequest.onreadystatechange = alertContents;
+                httpRequest.onreadystatechange = addContents;
                 httpRequest.open('POST', url);
                 httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 httpRequest.send('userName=' + encodeURIComponent(userName));
             }
 
-            function alertContents() {
+            function addContents() {
                 try {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === 200) {
                             var res = JSON.parse(httpRequest.responseText);
-                            alert(res.computedString);
+                            console.log(res.computedString !== targetElement.innerText);
+                            if(res.computedString !== targetElement.innerText){
+                                document.getElementById("aj").innerText = res.computedString;
+                            }
                         } else {
                             alert('リクエスト中に問題が発生しました');
                         }
