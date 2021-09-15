@@ -18,51 +18,33 @@
         (function(){
             var httpRequest;
             const targetElement = document.getElementById("aj");
-            const param = {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8"
+            fetch("data.json").then(res => {
+                if(res.status == 200) {
+                    res.json().then(json => {
+                        targetElement.textContent = json.computedString;
+                    }).catch(e => {
+                        console.log(e);
+                    });
                 }
-            }
-            fetch("data.json", param).then(function(res){
-                res.json().then(function(json){
-                    targetElement.textContent = json.computedString;
-                });
+            }).catch(e => {
+                console.log(e);
             })
             
-            document.getElementById('ajaxButton').onclick = function () {
+            document.getElementById('ajaxButton').onclick = () => {
                 var userName = document.getElementById('ajaxTextbox').value;
-                makeRequest('test.php', userName);
+                const param = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: userName
+                }
+                fetch('test.php', param).then(res => {
+                    res.json().then(json => {
+                        document.getElementById("aj").innerText = json.computedString;
+                    })
+                })
             };
-
-            function makeRequest(url, userName){
-                httpRequest = new XMLHttpRequest();
-                if(!httpRequest) {
-                    alert('中断 :( XMLHTTP インスタンスを生成できませんでした)')
-                    return false;
-                }
-                httpRequest.onreadystatechange = addContents;
-                httpRequest.open('POST', url);
-                httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                httpRequest.send('userName=' + encodeURIComponent(userName));
-            }
-
-            function addContents() {
-                try {
-                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                        if (httpRequest.status === 200) {
-                            var res = JSON.parse(httpRequest.responseText);
-                            if(res.computedString !== targetElement.innerText){
-                                document.getElementById("aj").innerText = res.computedString;
-                            }
-                        } else {
-                            alert('リクエスト中に問題が発生しました');
-                        }
-                    }
-                } catch (e) {
-                    alert('例外を捕捉: ' + e);
-                }
-            }
         })();
     </script>
 </body>
